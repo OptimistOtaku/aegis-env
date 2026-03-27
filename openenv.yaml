@@ -1,0 +1,25 @@
+name: aegis-env
+version: "1.0.0"
+description: >
+  An environment for training and evaluating AI agents on AI safety incident
+  response: triage anomalies in live deployment clusters, identify attack vectors,
+  isolate compromised components, apply targeted patches, and restore safe operation
+  before blast radius exceeds containment — including adversarial scenarios with
+  log poisoning and simultaneous compound incidents.
+author: your-hf-username
+tags:
+  - ai-safety
+  - incident-response
+  - security
+  - multi-step-reasoning
+  - adversarial
+tasks:
+  - id: task_easy
+    difficulty: easy
+    description: "Contain a single-component jailbreak before propagation"
+  - id: task_medium
+    difficulty: medium
+    description: "Diagnose and patch safety filter drift across 3 models with false positive noise"
+  - id: task_hard
+    difficulty: hard
+    description: "Resolve simultaneous amplification loop and prompt injection under adversarial log poisoning"

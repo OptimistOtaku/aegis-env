@@ -1,0 +1,111 @@
+{
+  "task_id": "task_medium",
+  "incident_id": "DFT",
+  "max_ticks": 15,
+  "initial_compromised": [
+    "filter_01",
+    "model_A",
+    "model_B"
+  ],
+  "root_cause_components": [
+    "filter_01"
+  ],
+  "false_positive_component": "model_C",
+  "symptom_components": [
+    "model_A",
+    "model_B"
+  ],
+  "components": [
+    {
+      "component_id": "lb_01",
+      "component_type": "load_balancer",
+      "health_score": 1.0,
+      "safety_status": "nominal",
+      "connections": [
+        "api_01"
+      ],
+      "recent_logs": [],
+      "metrics": {}
+    },
+    {
+      "component_id": "api_01",
+      "component_type": "inference_api",
+      "health_score": 1.0,
+      "safety_status": "nominal",
+      "connections": [
+        "model_A",
+        "model_B",
+        "model_C"
+      ],
+      "recent_logs": [],
+      "metrics": {}
+    },
+    {
+      "component_id": "model_A",
+      "component_type": "model",
+      "health_score": 1.0,
+      "safety_status": "nominal",
+      "connections": [
+        "filter_01"
+      ],
+      "recent_logs": [],
+      "metrics": {}
+    },
+    {
+      "component_id": "model_B",
+      "component_type": "model",
+      "health_score": 1.0,
+      "safety_status": "nominal",
+      "connections": [
+        "filter_01"
+      ],
+      "recent_logs": [],
+      "metrics": {}
+    },
+    {
+      "component_id": "model_C",
+      "component_type": "model",
+      "health_score": 1.0,
+      "safety_status": "nominal",
+      "connections": [
+        "filter_01"
+      ],
+      "recent_logs": [],
+      "metrics": {}
+    },
+    {
+      "component_id": "filter_01",
+      "component_type": "safety_filter",
+      "health_score": 1.0,
+      "safety_status": "nominal",
+      "connections": [
+        "app_01"
+      ],
+      "recent_logs": [],
+      "metrics": {}
+    },
+    {
+      "component_id": "app_01",
+      "component_type": "downstream_app",
+      "health_score": 1.0,
+      "safety_status": "nominal",
+      "connections": [],
+      "recent_logs": [],
+      "metrics": {}
+    },
+    {
+      "component_id": "data_pipe_01",
+      "component_type": "data_pipeline",
+      "health_score": 1.0,
+      "safety_status": "nominal",
+      "connections": [
+        "api_01"
+      ],
+      "recent_logs": [],
+      "metrics": {}
+    }
+  ],
+  "active_alerts": [
+    "WARNING: Output distribution shift detected across fleet."
+  ]
+}

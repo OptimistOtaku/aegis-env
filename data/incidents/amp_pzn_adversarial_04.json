@@ -1,0 +1,115 @@
+{
+  "task_id": "task_hard",
+  "incident_id": "AMP_PZN",
+  "max_ticks": 20,
+  "adversarial_mode": true,
+  "initial_compromised": [
+    "app_01",
+    "data_pipe_01",
+    "api_01",
+    "filter_01"
+  ],
+  "root_cause_components": [
+    "app_01",
+    "data_pipe_01"
+  ],
+  "amp_cause_id": "app_01",
+  "pzn_cause_id": "data_pipe_01",
+  "downstream_app_id": "app_01",
+  "components": [
+    {
+      "component_id": "lb_01",
+      "component_type": "load_balancer",
+      "health_score": 1.0,
+      "safety_status": "nominal",
+      "connections": [
+        "api_01"
+      ],
+      "recent_logs": [],
+      "metrics": {}
+    },
+    {
+      "component_id": "api_01",
+      "component_type": "inference_api",
+      "health_score": 1.0,
+      "safety_status": "nominal",
+      "connections": [
+        "model_A",
+        "model_B",
+        "model_C"
+      ],
+      "recent_logs": [],
+      "metrics": {}
+    },
+    {
+      "component_id": "model_A",
+      "component_type": "model",
+      "health_score": 1.0,
+      "safety_status": "nominal",
+      "connections": [
+        "filter_01"
+      ],
+      "recent_logs": [],
+      "metrics": {}
+    },
+    {
+      "component_id": "model_B",
+      "component_type": "model",
+      "health_score": 1.0,
+      "safety_status": "nominal",
+      "connections": [
+        "filter_01"
+      ],
+      "recent_logs": [],
+      "metrics": {}
+    },
+    {
+      "component_id": "model_C",
+      "component_type": "model",
+      "health_score": 1.0,
+      "safety_status": "nominal",
+      "connections": [
+        "filter_01"
+      ],
+      "recent_logs": [],
+      "metrics": {}
+    },
+    {
+      "component_id": "filter_01",
+      "component_type": "safety_filter",
+      "health_score": 1.0,
+      "safety_status": "nominal",
+      "connections": [
+        "app_01"
+      ],
+      "recent_logs": [],
+      "metrics": {}
+    },
+    {
+      "component_id": "app_01",
+      "component_type": "downstream_app",
+      "health_score": 1.0,
+      "safety_status": "nominal",
+      "connections": [
+        "api_01"
+      ],
+      "recent_logs": [],
+      "metrics": {}
+    },
+    {
+      "component_id": "data_pipe_01",
+      "component_type": "data_pipeline",
+      "health_score": 1.0,
+      "safety_status": "compromised",
+      "connections": [
+        "api_01"
+      ],
+      "recent_logs": [],
+      "metrics": {}
+    }
+  ],
+  "active_alerts": [
+    "CRITICAL: Service degradation.",
+    "ERROR: Pipeline desync."
+  ]
+}
