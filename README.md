@@ -1,3 +1,13 @@
+---
+title: aegis-env
+emoji: 🛡️
+colorFrom: blue
+colorTo: slate
+sdk: docker
+pinned: false
+app_port: 7860
+---
+
 # aegis-env
 
 > *Every major AI lab has an oncall rotation for model safety incidents.*
