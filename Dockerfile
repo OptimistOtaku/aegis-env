@@ -14,5 +14,8 @@ COPY --chown=user . .
 # Switch to the "user" user
 USER user
 
+# Expose the port Hugging Face Spaces expects
+EXPOSE 7860
+
 # Hugging Face Spaces expects the app to be on port 7860
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "7860"]

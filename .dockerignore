@@ -1,0 +1,10 @@
+.venv/
+.git/
+.pytest_cache/
+__pycache__/
+*.pyc
+*.pyo
+.env
+baseline_results.json
+openenv_aegis_build_prompt.md
+aegis_env_audit.md

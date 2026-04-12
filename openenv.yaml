@@ -6,13 +6,55 @@ description: >
   isolate compromised components, apply targeted patches, and restore safe operation
   before blast radius exceeds containment — including adversarial scenarios with
   log poisoning and simultaneous compound incidents.
-author: your-hf-username
+author: aegis-team
 tags:
   - ai-safety
   - incident-response
   - security
   - multi-step-reasoning
   - adversarial
+observation_space:
+  type: object
+  fields:
+    - name: task_id
+      type: string
+    - name: tick
+      type: integer
+    - name: max_ticks
+      type: integer
+    - name: incident_id
+      type: string
+    - name: components
+      type: array
+      description: "List of ComponentState objects with health_score, safety_status, connections, recent_logs, metrics"
+    - name: user_impact_score
+      type: float
+      range: [0.0, 1.0]
+    - name: blast_radius
+      type: array
+      description: "Component IDs currently under active compromise"
+    - name: active_alerts
+      type: array
+      description: "System-generated alert strings"
+    - name: tool_history
+      type: array
+      description: "History of agent actions and outcomes"
+    - name: done
+      type: boolean
+action_space:
+  type: object
+  fields:
+    - name: tool
+      type: enum
+      values: [read_logs, run_diagnostic, isolate, patch, rollback, scale_down, reroute_traffic, alert_human, validate, restore]
+    - name: target_component
+      type: string
+    - name: parameters
+      type: object
+    - name: reasoning
+      type: string
+      required: true
+reward_range: [0.0, 1.0]
 tasks:
   - id: task_easy
     difficulty: easy

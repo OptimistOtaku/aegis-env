@@ -2,7 +2,7 @@
 title: aegis-env
 emoji: 🛡️
 colorFrom: blue
-colorTo: slate
+colorTo: gray
 sdk: docker
 pinned: false
 app_port: 7860
@@ -94,19 +94,24 @@ obs = env.reset()
 
 action = Action(
     tool=Tool.RUN_DIAGNOSTIC, 
-    target_component="filter_01", 
+    target_component="data_pipe_01", 
     parameters={}, 
-    reasoning="Running initial discovery."
+    reasoning="Running initial discovery on compromised pipeline."
 )
-next_obs, reward = env.step(action)
+obs, reward, done, info = env.step(action)
+
+# OpenEnv spec: full state snapshot
+state = env.state()
 ```
 
 ### 3. API Details
 
 A pre-configured FastAPI server comes out of the box providing standard OpenEnv endpoints:
-- `POST /reset`
-- `POST /step`
-- `GET /score`
+- `POST /reset` — Initialize environment with a task
+- `POST /step` — Apply an action and advance simulation
+- `GET /observation` — Current observation without advancing time
+- `GET /state` — Full internal state snapshot (OpenEnv spec)
+- `GET /score` — Cumulative grader score and progress
 
 Run it:
 ```bash
@@ -115,13 +120,26 @@ uvicorn app.main:app --port 8000
 
 ### 4. Baseline Results
 
-The included `baseline.py` script frames `gpt-4o-mini` as an oncall AI safety engineer. See `baseline_results.json` for granular outputs. You can run the baseline evaluation locally:
+The included `baseline.py` script evaluates an agent against all 3 tasks. Without an API key, it runs a deterministic heuristic mock agent; with `OPENAI_API_KEY` set, it uses `gpt-4o-mini`.
 
 ```bash
+# Mock baseline (deterministic, no API key required)
+python baseline.py
+
+# LLM baseline (requires OpenAI API key)
 export OPENAI_API_KEY=sk-...
 python baseline.py
 ```
 
-Currently, frontier models score highly on `task_easy` (~0.81), struggle with false positive rejection on `task_medium` (~0.57), and repeatedly fall for the adversarial log injections in `task_hard` (~0.31). 
+**Mock Heuristic Baseline** (deterministic, reproducible):
+
+| Task | Score | Steps |
+|---|---|---|
+| `task_easy` | 0.06 | 9 |
+| `task_medium` | 0.12 | 14 |
+| `task_hard` | 0.14 | 20 |
+| **Average** | **0.11** | — |
+
+The mock agent follows a simple diagnose → isolate → patch → validate → restore loop without strategic reasoning. Frontier LLM agents with proper reasoning should significantly outperform these baselines.
 
 Build an agent that can do better.

@@ -18,6 +18,10 @@ class MediumGrader(BaseGrader):
                 breakdown["patch_symptom"] = -0.15
                 explanations.append("Patched individual model instead of root cause (-0.15)")
                 
-        if env.done and env.tick_count <= 12 and len(env.propagation.get_blast_radius()) == 0:
-            breakdown["speed_bonus"] = 0.10
-            explanations.append("Completed task within 12 ticks bonus (+0.10)")
+        if env.done:
+            # Speed bonus: resolved quickly AND correctly (root cause actually patched)
+            if (env.tick_count <= 12 
+                and len(env.propagation.get_blast_radius()) == 0
+                and self.root_cause_components.issubset(self.patched_components)):
+                breakdown["speed_bonus"] = 0.10
+                explanations.append("Completed task within 12 ticks with root cause patched (+0.10)")

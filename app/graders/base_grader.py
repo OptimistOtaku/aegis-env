@@ -84,9 +84,11 @@ class BaseGrader:
         
         step_value = sum(breakdown.values())
         self.cumulative_score += step_value
+        # Clamp cumulative score to [0.0, 1.0] per OpenEnv spec
+        self.cumulative_score = max(0.0, min(1.0, self.cumulative_score))
         
         return Reward(
-            value=step_value,
+            value=max(0.0, min(1.0, step_value + 0.5)),  # Normalize step reward to [0,1] centered at 0.5
             explanation=", ".join(explanations) if explanations else "Step processed.",
             breakdown=breakdown,
             blast_radius_delta=blast_radius_delta,

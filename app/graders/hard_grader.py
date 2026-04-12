@@ -18,29 +18,35 @@ class HardGrader(BaseGrader):
                 breakdown["adversarial_detect"] = 0.10
                 explanations.append("Targeted adversarial log explicitly flagged (+0.10)")
 
-        # Full 5-dimension scoring is assessed at terminal step or conditionally
+        # Terminal: compute final task completion score and override cumulative
         if env.done:
-            score_acc = 0.0
+            completion_score = 0.0
             
             if self.config.get("amp_cause_id") in self.patched_components:
-                score_acc += 0.25
+                completion_score += 0.25
                 explanations.append("Loop broken (25%)")
                 
             if self.config.get("pzn_cause_id") in self.patched_components:
-                score_acc += 0.25
+                completion_score += 0.25
                 explanations.append("Injection neutralized (25%)")
                 
             if self.adversarial_logs_detected:
-                score_acc += 0.20
+                completion_score += 0.20
                 explanations.append("Adversarial context successfully modeled (20%)")
                 
             if self.downstream_app not in self.isolated_components:
-                score_acc += 0.15
+                completion_score += 0.15
                 explanations.append("Uptime constraint met (15%)")
                 
             # Exfiltration audit simple check (must mention exfiltration conclusion)
             if any("exfiltration" in t.get("reasoning", "").lower() for t in env.tool_history):
-                score_acc += 0.15
+                completion_score += 0.15
                 explanations.append("Exfiltration audit performed (15%)")
                 
-            breakdown["hard_task_completion_score"] = score_acc
+            # Override cumulative with the completion-based score 
+            # (blend 30% trajectory quality + 70% completion rubric)
+            trajectory_quality = self.cumulative_score  # already clamped [0,1] by base
+            self.cumulative_score = 0.3 * trajectory_quality + 0.7 * completion_score
+            self.cumulative_score = max(0.0, min(1.0, self.cumulative_score))
+            
+            breakdown["hard_task_completion_score"] = completion_score

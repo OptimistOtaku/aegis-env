@@ -31,8 +31,8 @@
     {
       "component_id": "api_01",
       "component_type": "inference_api",
-      "health_score": 1.0,
-      "safety_status": "nominal",
+      "health_score": 0.6,
+      "safety_status": "degraded",
       "connections": [
         "model_A",
         "model_B",
@@ -77,8 +77,8 @@
     {
       "component_id": "filter_01",
       "component_type": "safety_filter",
-      "health_score": 1.0,
-      "safety_status": "nominal",
+      "health_score": 0.7,
+      "safety_status": "degraded",
       "connections": [
         "app_01"
       ],
@@ -88,8 +88,8 @@
     {
       "component_id": "app_01",
       "component_type": "downstream_app",
-      "health_score": 1.0,
-      "safety_status": "nominal",
+      "health_score": 0.3,
+      "safety_status": "compromised",
       "connections": [
         "api_01"
       ],
@@ -99,7 +99,7 @@
     {
       "component_id": "data_pipe_01",
       "component_type": "data_pipeline",
-      "health_score": 1.0,
+      "health_score": 0.4,
       "safety_status": "compromised",
       "connections": [
         "api_01"

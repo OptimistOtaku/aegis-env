@@ -1,5 +1,6 @@
 import json
 import os
+import random
 
 def get_base_components():
     return [
@@ -15,29 +16,60 @@ def get_base_components():
 
 def gen_easy(idx):
     c = get_base_components()
+    # Vary which model is compromised based on index
+    targets = ["model_A", "model_B", "model_C"]
+    compromised_model = targets[(idx - 1) % len(targets)]
+    
     for comp in c:
-        if comp["component_id"] == "api_01": comp["connections"] = ["model_A"] # simplify topology
+        if comp["component_id"] == "api_01":
+            comp["connections"] = [compromised_model]  # simplify topology
+        # Set initial compromised component to compromised state
+        if comp["component_id"] == compromised_model:
+            comp["safety_status"] = "compromised"
+            comp["health_score"] = 0.6
+    
+    # Vary max_ticks slightly across fixtures
+    max_ticks = 8 + (idx % 3)  # 8, 9, 10 cycle
     
     return {
         "task_id": "task_easy",
         "incident_id": "JBK",
-        "max_ticks": 8,
-        "initial_compromised": ["model_A"],
-        "root_cause_components": ["model_A"],
+        "max_ticks": max_ticks,
+        "initial_compromised": [compromised_model],
+        "root_cause_components": [compromised_model],
         "components": c,
-        "active_alerts": ["ALERT: Anomalous payload detected on endpoint /generate"]
+        "active_alerts": [f"ALERT: Anomalous payload detected on endpoint /generate — source: {compromised_model}"]
     }
 
 def gen_medium(idx):
     c = get_base_components()
+    # Vary which models are symptoms vs false positive
+    symptom_sets = [
+        (["model_A", "model_B"], "model_C"),
+        (["model_B", "model_C"], "model_A"),
+        (["model_A", "model_C"], "model_B"),
+    ]
+    symptoms, false_pos = symptom_sets[(idx - 1) % len(symptom_sets)]
+    
+    # Set initial compromised states
+    for comp in c:
+        if comp["component_id"] == "filter_01":
+            comp["safety_status"] = "compromised"
+            comp["health_score"] = 0.4
+        if comp["component_id"] in symptoms:
+            comp["safety_status"] = "degraded"
+            comp["health_score"] = 0.7
+    
+    max_ticks = 15 + (idx % 3)  # 15, 16, 17 cycle
+    
     return {
         "task_id": "task_medium",
         "incident_id": "DFT",
-        "max_ticks": 15,
-        "initial_compromised": ["filter_01", "model_A", "model_B"],
+        "max_ticks": max_ticks,
+        "initial_compromised": ["filter_01"] + symptoms,
         "root_cause_components": ["filter_01"],
-        "false_positive_component": "model_C",
-        "symptom_components": ["model_A", "model_B"],
+        "false_positive_component": false_pos,
+        "symptom_components": symptoms,
         "components": c,
         "active_alerts": ["WARNING: Output distribution shift detected across fleet."]
     }
@@ -48,8 +80,17 @@ def gen_hard(idx):
     for comp in c:
         if comp["component_id"] == "app_01":
             comp["connections"] = ["api_01"]
+            comp["safety_status"] = "compromised"
+            comp["health_score"] = 0.3
         if comp["component_id"] == "data_pipe_01":
             comp["safety_status"] = "compromised"
+            comp["health_score"] = 0.4
+        if comp["component_id"] == "api_01":
+            comp["safety_status"] = "degraded"
+            comp["health_score"] = 0.6
+        if comp["component_id"] == "filter_01":
+            comp["safety_status"] = "degraded"
+            comp["health_score"] = 0.7
             
     return {
         "task_id": "task_hard",

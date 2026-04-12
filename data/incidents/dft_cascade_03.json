@@ -5,15 +5,15 @@
   "initial_compromised": [
     "filter_01",
     "model_A",
-    "model_B"
+    "model_C"
   ],
   "root_cause_components": [
     "filter_01"
   ],
-  "false_positive_component": "model_C",
+  "false_positive_component": "model_B",
   "symptom_components": [
     "model_A",
-    "model_B"
+    "model_C"
   ],
   "components": [
     {
@@ -43,8 +43,8 @@
     {
       "component_id": "model_A",
       "component_type": "model",
-      "health_score": 1.0,
-      "safety_status": "nominal",
+      "health_score": 0.7,
+      "safety_status": "degraded",
       "connections": [
         "filter_01"
       ],
@@ -65,8 +65,8 @@
     {
       "component_id": "model_C",
       "component_type": "model",
-      "health_score": 1.0,
-      "safety_status": "nominal",
+      "health_score": 0.7,
+      "safety_status": "degraded",
       "connections": [
         "filter_01"
       ],
@@ -76,8 +76,8 @@
     {
       "component_id": "filter_01",
       "component_type": "safety_filter",
-      "health_score": 1.0,
-      "safety_status": "nominal",
+      "health_score": 0.4,
+      "safety_status": "compromised",
       "connections": [
         "app_01"
       ],

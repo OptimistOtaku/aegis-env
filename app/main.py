@@ -88,7 +88,7 @@ def step_env(action: Action):
     if current_env.done:
         raise HTTPException(status_code=400, detail="Environment is terminated. Call /reset.")
         
-    obs, reward = current_env.step(action)
+    obs, reward, done, info = current_env.step(action)
     return StepResponse(observation=obs, reward=reward)
 
 @app.get("/observation", response_model=Observation)
@@ -97,6 +97,13 @@ def get_observation():
     if not current_env:
         raise HTTPException(status_code=400, detail="Environment not initialized.")
     return current_env._get_observation()
+
+@app.get("/state")
+def get_state():
+    """Full internal state snapshot (OpenEnv spec)"""
+    if not current_env:
+        raise HTTPException(status_code=400, detail="Environment not initialized.")
+    return current_env.state()
 
 @app.get("/score")
 def get_score():

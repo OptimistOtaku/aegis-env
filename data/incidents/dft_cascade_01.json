@@ -1,7 +1,7 @@
 {
   "task_id": "task_medium",
   "incident_id": "DFT",
-  "max_ticks": 15,
+  "max_ticks": 16,
   "initial_compromised": [
     "filter_01",
     "model_A",
@@ -43,8 +43,8 @@
     {
       "component_id": "model_A",
       "component_type": "model",
-      "health_score": 1.0,
-      "safety_status": "nominal",
+      "health_score": 0.7,
+      "safety_status": "degraded",
       "connections": [
         "filter_01"
       ],
@@ -54,8 +54,8 @@
     {
       "component_id": "model_B",
       "component_type": "model",
-      "health_score": 1.0,
-      "safety_status": "nominal",
+      "health_score": 0.7,
+      "safety_status": "degraded",
       "connections": [
         "filter_01"
       ],
@@ -76,8 +76,8 @@
     {
       "component_id": "filter_01",
       "component_type": "safety_filter",
-      "health_score": 1.0,
-      "safety_status": "nominal",
+      "health_score": 0.4,
+      "safety_status": "compromised",
       "connections": [
         "app_01"
       ],

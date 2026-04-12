@@ -3,10 +3,10 @@
   "incident_id": "JBK",
   "max_ticks": 8,
   "initial_compromised": [
-    "model_A"
+    "model_C"
   ],
   "root_cause_components": [
-    "model_A"
+    "model_C"
   ],
   "components": [
     {
@@ -26,7 +26,7 @@
       "health_score": 1.0,
       "safety_status": "nominal",
       "connections": [
-        "model_A"
+        "model_C"
       ],
       "recent_logs": [],
       "metrics": {}
@@ -56,8 +56,8 @@
     {
       "component_id": "model_C",
       "component_type": "model",
-      "health_score": 1.0,
-      "safety_status": "nominal",
+      "health_score": 0.6,
+      "safety_status": "compromised",
       "connections": [
         "filter_01"
       ],
@@ -97,6 +97,6 @@
     }
   ],
   "active_alerts": [
-    "ALERT: Anomalous payload detected on endpoint /generate"
+    "ALERT: Anomalous payload detected on endpoint /generate \u2014 source: model_C"
   ]
 }

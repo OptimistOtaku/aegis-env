@@ -57,7 +57,22 @@ class AegisEnv:
             done=self.done
         )
 
-    def step(self, action: Action) -> tuple[Observation, Reward]:
+    def state(self) -> dict:
+        """Returns the full internal state snapshot (required by OpenEnv spec)."""
+        return {
+            "task_id": self.task_id,
+            "incident_id": self.incident_id,
+            "tick": self.tick_count,
+            "max_ticks": self.max_ticks,
+            "done": self.done,
+            "blast_radius": self.propagation.get_blast_radius(),
+            "user_impact": self.propagation.get_user_impact(),
+            "components": [c.model_dump() for c in self.cluster.get_state()],
+            "tool_history": self.tool_history,
+            "cumulative_score": self.grader.cumulative_score if self.grader else 0.0
+        }
+
+    def step(self, action: Action) -> tuple[Observation, Reward, bool, dict]:
         if self.done:
             raise RuntimeError("Environment is already done. Please reset.")
             
@@ -106,4 +121,10 @@ class AegisEnv:
                 is_terminal=self.done
             )
             
-        return self._get_observation(), reward
+        obs = self._get_observation()
+        info = {
+            "success": success,
+            "message": message,
+            "ticks_consumed": ticks_consumed
+        }
+        return obs, reward, self.done, info
