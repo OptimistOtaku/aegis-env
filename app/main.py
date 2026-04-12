@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Body
+from fastapi import FastAPI, HTTPException, Request
 from pydantic import BaseModel
 from typing import Optional
 import os
@@ -39,11 +39,18 @@ def get_tools():
     return {t.name: t.value for t in Tool}
 
 @app.post("/reset", response_model=Observation)
-def reset_env(body: Optional[dict] = Body(default=None)):
+async def reset_env(request: Request):
     """Endpoint 3/6: Reset environment — accepts empty/null body, defaults to task_easy"""
     global current_env
-    # Safely extract task_id from whatever body arrives (null, {}, or full request)
-    req_body = body or {}
+
+    # Parse body safely — handles no body, empty body, or valid JSON
+    try:
+        req_body = await request.json()
+        if not isinstance(req_body, dict):
+            req_body = {}
+    except Exception:
+        req_body = {}
+
     task_id = req_body.get("task_id", "task_easy") or "task_easy"
     fixture_id = req_body.get("fixture_id", None)
 
