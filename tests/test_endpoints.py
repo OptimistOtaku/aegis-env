@@ -1,5 +1,5 @@
 from fastapi.testclient import TestClient
-from app.main import app
+from server.app import app
 
 client = TestClient(app)
 
@@ -126,7 +126,7 @@ def test_invalid_task():
 
 def test_step_without_reset():
     # Ensure fresh state by checking if env is none
-    import app.main as main_module
+    import server.app as main_module
     main_module.current_env = None
     
     action_payload = {

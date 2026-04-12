@@ -1,4 +1,4 @@
-from app.simulator.cluster import ClusterGraph
+from server.simulator.cluster import ClusterGraph
 from typing import Set
 
 class PropagationEngine:

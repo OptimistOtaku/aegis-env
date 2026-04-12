@@ -5,10 +5,10 @@ import os
 import glob
 import random
 
-from app.models import Observation, Action, Reward, Tool
-from app.tasks.task_easy import load_task_easy
-from app.tasks.task_medium import load_task_medium
-from app.tasks.task_hard import load_task_hard
+from server.models import Observation, Action, Reward, Tool
+from server.tasks.task_easy import load_task_easy
+from server.tasks.task_medium import load_task_medium
+from server.tasks.task_hard import load_task_hard
 
 app = FastAPI(title="aegis-env", description="OpenEnv AI Safety Incident Response Environment")
 
@@ -132,3 +132,10 @@ def get_score():
         "isolated_components": list(current_env.grader.isolated_components),
         "validated_components": list(current_env.grader.validated_components)
     }
+
+def main():
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=7860)
+
+if __name__ == "__main__":
+    main()

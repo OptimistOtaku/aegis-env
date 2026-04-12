@@ -1,4 +1,4 @@
-from app.graders.base_grader import BaseGrader
+from server.graders.base_grader import BaseGrader
 
 class EasyGrader(BaseGrader):
     def __init__(self, config: dict):

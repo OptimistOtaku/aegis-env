@@ -2,10 +2,10 @@ import os
 import json
 import random
 from typing import Dict, Any
-from app.models import Tool, Action
-from app.tasks.task_easy import load_task_easy
-from app.tasks.task_medium import load_task_medium
-from app.tasks.task_hard import load_task_hard
+from server.models import Tool, Action
+from server.tasks.task_easy import load_task_easy
+from server.tasks.task_medium import load_task_medium
+from server.tasks.task_hard import load_task_hard
 
 try:
     from openai import OpenAI

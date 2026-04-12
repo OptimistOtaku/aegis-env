@@ -1,6 +1,6 @@
 import copy
 from typing import Dict, List, Optional
-from app.models import ComponentState
+from server.models import ComponentState
 
 class ClusterGraph:
     def __init__(self, components: List[ComponentState]):

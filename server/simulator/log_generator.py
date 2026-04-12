@@ -1,8 +1,8 @@
 import random
 import time
 from typing import List, Optional
-from app.models import LogEvent, ComponentState
-from app.simulator.cluster import ClusterGraph
+from server.models import LogEvent, ComponentState
+from server.simulator.cluster import ClusterGraph
 
 class LogGenerator:
     """Generates synthetic logs per component, including adversarial noise."""

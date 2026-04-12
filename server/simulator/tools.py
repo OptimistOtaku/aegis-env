@@ -1,7 +1,7 @@
 from typing import Dict, Any, Tuple
-from app.models import Tool
-from app.simulator.cluster import ClusterGraph
-from app.simulator.propagation import PropagationEngine
+from server.models import Tool
+from server.simulator.cluster import ClusterGraph
+from server.simulator.propagation import PropagationEngine
 
 class ToolSandbox:
     def __init__(self):

@@ -1,10 +1,10 @@
 import json
 from typing import Dict, Any, List
-from app.models import Observation, Action, Reward, Tool, ComponentState
-from app.simulator.cluster import ClusterGraph
-from app.simulator.propagation import PropagationEngine
-from app.simulator.log_generator import LogGenerator
-from app.simulator.tools import ToolSandbox
+from server.models import Observation, Action, Reward, Tool, ComponentState
+from server.simulator.cluster import ClusterGraph
+from server.simulator.propagation import PropagationEngine
+from server.simulator.log_generator import LogGenerator
+from server.simulator.tools import ToolSandbox
 
 class AegisEnv:
     """Core Environment Class tying together simulator components and exposing Reset/Step API."""

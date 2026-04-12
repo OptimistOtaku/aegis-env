@@ -1,5 +1,5 @@
-from app.graders.base_grader import BaseGrader
-from app.models import Tool
+from server.graders.base_grader import BaseGrader
+from server.models import Tool
 
 class MediumGrader(BaseGrader):
     def __init__(self, config: dict):

@@ -1,4 +1,4 @@
-from app.models import Reward, Action, Tool
+from server.models import Reward, Action, Tool
 
 class BaseGrader:
     def __init__(self, config: dict):

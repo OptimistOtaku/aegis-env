@@ -1,11 +1,13 @@
 [build-system]
-requires = ["setuptools>=61.0"]
+requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "aegis-env"
 version = "1.0.0"
 description = "AI Safety Incident Response OpenEnv"
+readme = "README.md"
+requires-python = ">=3.11"
 authors = [
     { name="aegis-env team" }
 ]
@@ -19,7 +21,15 @@ dependencies = [
     "pytest",
     "openai",
     "requests",
+    "openenv-core>=0.2.0",
 ]
+
+[project.scripts]
+server = "server.app:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["server*"]
 
 [project.urls]
 "Homepage" = "https://huggingface.co/spaces/TiddyDaddy/aegis-env"
