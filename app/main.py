@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Body
 from pydantic import BaseModel
 from typing import Optional
 import os
@@ -39,26 +39,31 @@ def get_tools():
     return {t.name: t.value for t in Tool}
 
 @app.post("/reset", response_model=Observation)
-def reset_env(req: ResetRequest = ResetRequest()):
-    """Endpoint 3/6: Reset environment"""
+def reset_env(body: Optional[dict] = Body(default=None)):
+    """Endpoint 3/6: Reset environment — accepts empty/null body, defaults to task_easy"""
     global current_env
+    # Safely extract task_id from whatever body arrives (null, {}, or full request)
+    req_body = body or {}
+    task_id = req_body.get("task_id", "task_easy") or "task_easy"
+    fixture_id = req_body.get("fixture_id", None)
+
     task_map = {
         "task_easy": load_task_easy,
         "task_medium": load_task_medium,
         "task_hard": load_task_hard
     }
-    
-    if req.task_id not in task_map:
-        raise HTTPException(status_code=400, detail=f"Unknown task {req.task_id}")
+
+    if task_id not in task_map:
+        raise HTTPException(status_code=400, detail=f"Unknown task {task_id}")
         
     fixtures_dir = os.path.join(os.path.dirname(__file__), "..", "data", "incidents")
     
-    if req.fixture_id:
-        target = os.path.join(fixtures_dir, req.fixture_id)
+    if fixture_id:
+        target = os.path.join(fixtures_dir, fixture_id)
         if os.path.exists(target):
-            current_env = task_map[req.task_id](target)
+            current_env = task_map[task_id](target)
         else:
-            raise HTTPException(status_code=404, detail=f"Fixture not found: {req.fixture_id}")
+            raise HTTPException(status_code=404, detail=f"Fixture not found: {fixture_id}")
     else:
         # Auto-resolve a fixture based on task
         prefix_map = {
@@ -66,16 +71,16 @@ def reset_env(req: ResetRequest = ResetRequest()):
             "task_medium": "dft_",
             "task_hard": "amp_"
         }
-        prefix = prefix_map[req.task_id]
+        prefix = prefix_map[task_id]
         pattern = os.path.join(fixtures_dir, f"{prefix}*.json")
         fixture_files = glob.glob(pattern)
-        
+
         if not fixture_files:
-            raise HTTPException(status_code=404, detail=f"No fixtures found for {req.task_id} in data/incidents/")
-            
+            raise HTTPException(status_code=404, detail=f"No fixtures found for {task_id} in data/incidents/")
+
         chosen = random.choice(fixture_files)
-        current_env = task_map[req.task_id](chosen)
-    
+        current_env = task_map[task_id](chosen)
+
     return current_env.reset()
 
 @app.post("/step", response_model=StepResponse)
