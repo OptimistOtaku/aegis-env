@@ -72,17 +72,15 @@ A cyclical amplification loop compromises a downstream app, while a simultaneous
 
 ---
 
-## Usage
+## Setup & Usage
 
-### 1. Requirements
+### 1. Install Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 2. Standalone Environment
-
-You can interact with the environment programmatically:
+### 2. Standalone Environment (Python)
 
 ```python
 import json
@@ -104,30 +102,82 @@ obs, reward, done, info = env.step(action)
 state = env.state()
 ```
 
-### 3. API Details
+### 3. API Server
 
-A pre-configured FastAPI server comes out of the box providing standard OpenEnv endpoints:
-- `POST /reset` — Initialize environment with a task
-- `POST /step` — Apply an action and advance simulation
-- `GET /observation` — Current observation without advancing time
-- `GET /state` — Full internal state snapshot (OpenEnv spec)
-- `GET /score` — Cumulative grader score and progress
+A pre-configured FastAPI server provides standard OpenEnv endpoints:
 
-Run it:
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/` | Environment info (health check) |
+| `GET` | `/tools` | Available tool enumeration |
+| `POST` | `/reset` | Initialize environment with a task |
+| `POST` | `/step` | Apply an action and advance simulation |
+| `GET` | `/observation` | Current observation without advancing time |
+| `GET` | `/state` | Full internal state snapshot (OpenEnv spec) |
+| `GET` | `/score` | Cumulative grader score and progress |
+
 ```bash
-uvicorn app.main:app --port 8000
+uvicorn app.main:app --host 0.0.0.0 --port 7860
 ```
 
-### 4. Baseline Results
-
-The included `baseline.py` script evaluates an agent against all 3 tasks. Without an API key, it runs a deterministic heuristic mock agent; with `OPENAI_API_KEY` set, it uses `gpt-4o-mini`.
+### 4. Docker
 
 ```bash
-# Mock baseline (deterministic, no API key required)
-python baseline.py
+docker build -t aegis-env .
+docker run -p 7860:7860 aegis-env
+```
 
-# LLM baseline (requires OpenAI API key)
-export OPENAI_API_KEY=sk-...
+---
+
+## Inference Script
+
+The mandatory `inference.py` script is located in the project root. It calls the running environment over HTTP and uses the OpenAI client for LLM reasoning.
+
+### Required Environment Variables
+
+| Variable | Description |
+|---|---|
+| `API_BASE_URL` | The API endpoint for the LLM (e.g. `https://api.openai.com/v1`) |
+| `MODEL_NAME` | The model identifier (e.g. `gpt-4o-mini`) |
+| `HF_TOKEN` | Your Hugging Face / API key |
+| `ENV_URL` | *(Optional)* Environment URL — defaults to `http://localhost:7860` |
+
+### Running Inference
+
+```bash
+# 1. Start the environment server
+uvicorn app.main:app --host 0.0.0.0 --port 7860 &
+
+# 2. Set credentials
+export API_BASE_URL=https://api.openai.com/v1
+export MODEL_NAME=gpt-4o-mini
+export HF_TOKEN=your-api-key
+
+# 3. Run inference
+python inference.py
+```
+
+### Structured Output Format
+
+The script emits structured stdout logs for automated evaluation:
+
+```
+[START] task_id=task_easy
+[STEP] task_id=task_easy step=1 tool=run_diagnostic target=model_A reward=0.5700 done=False reasoning="..."
+[STEP] task_id=task_easy step=2 tool=isolate target=model_A reward=0.6200 done=False reasoning="..."
+...
+[END] task_id=task_easy final_score=0.8100 steps=5
+```
+
+Results are also saved to `inference_results.json`.
+
+---
+
+## Baseline Results
+
+The `baseline.py` script runs a deterministic heuristic mock agent (no API key required):
+
+```bash
 python baseline.py
 ```
 

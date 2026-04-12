@@ -55,6 +55,12 @@ action_space:
       type: string
       required: true
 reward_range: [0.0, 1.0]
+inference_script: inference.py
+baseline_script: baseline.py
+env_vars:
+  - API_BASE_URL
+  - MODEL_NAME
+  - HF_TOKEN
 tasks:
   - id: task_easy
     difficulty: easy
