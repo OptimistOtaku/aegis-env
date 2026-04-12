@@ -16,7 +16,7 @@ app = FastAPI(title="aegis-env", description="OpenEnv AI Safety Incident Respons
 current_env = None
 
 class ResetRequest(BaseModel):
-    task_id: str
+    task_id: Optional[str] = "task_easy"
     fixture_id: Optional[str] = None
 
 class StepResponse(BaseModel):
@@ -39,7 +39,7 @@ def get_tools():
     return {t.name: t.value for t in Tool}
 
 @app.post("/reset", response_model=Observation)
-def reset_env(req: ResetRequest):
+def reset_env(req: ResetRequest = ResetRequest()):
     """Endpoint 3/6: Reset environment"""
     global current_env
     task_map = {
