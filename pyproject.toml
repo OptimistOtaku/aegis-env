@@ -33,3 +33,6 @@ include = ["server*"]
 
 [project.urls]
 "Homepage" = "https://huggingface.co/spaces/TiddyDaddy/aegis-env"
+
+[tool.pytest.ini_options]
+norecursedirs = ["aegis-scanner", ".venv", "venv", "env"]

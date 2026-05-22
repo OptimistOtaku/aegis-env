@@ -10,3 +10,4 @@ inference_results.json
 openenv_aegis_build_prompt.md
 aegis_env_audit.md
 *.md.bak
+aegis-scanner/
