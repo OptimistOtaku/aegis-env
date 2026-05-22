@@ -1,5 +1,5 @@
 {
-  "name": "@aegis/scan",
+  "name": "@optimistotaku/aegis-scan",
   "version": "1.0.0",
   "description": "Pre-deployment security scanner for AI-infused web apps, prompt injections, credentials, and compliance.",
   "main": "bin/cli.js",
